@@ -25,11 +25,14 @@ digraph G {
   Course -> course_professor[style=bold]
   course_professor -> Professor [arrowhead=none]
 
+  // course -> TA is one-to-many, total participation for course
   course_ta[shape=diamond]
-  course_ta -> {Teaching_Assistant; Course} [arrowhead=none]
+  course_ta -> Teaching_Assistant [arrowhead=none]
+  course_ta -> Course [arrowhead=none, style=bold]
 
-  student_course[shape=diamond]
-  student_course -> {Student; Course} [arrowhead=none]
+  // student -> course is many to many
+  enrolled[shape=diamond]
+  enrolled -> {Student; Course} [arrowhead=none]
 
 
   Topic[shape=box]
@@ -40,22 +43,25 @@ digraph G {
   Topic -> course_topic [style=bold]
   Topic -> {topic_id[label=<<u>id</u>>]; topic_name } [arrowhead=none]
 
-  Assessment[shape=box]
-  Assessment -> {assesment_id[label=<<u>id</u>>]; title} [arrowhead=none]
+  Exercise[shape=box]
+  Exercise -> {exercise_id[label=<<u>id</u>>]; title; inclass_home; seed; correct_points; incorrect_points; score_method; retries; start_date; end_date;} [arrowhead=none]
 
-  // course -> assessment is one-to-many, total participation for assessments
-  course_assessment[shape=diamond]
-  course_assessment -> Course [arrowhead=none]
-  Assessment -> course_assessment [style=bold]
+  exercise_topic[shape=diamond]
+  Exercise -> exercise_topic[arrowhead=none]
+
+  // course -> exercise is one-to-many, total participation for exercises
+  course_exercise[shape=diamond]
+  course_exercise -> Course [arrowhead=none]
+  Exercise -> course_exercise [style=bold]
 
 
   Question[shape=box]
-  Question -> {question_id[label=<<u>id</u>>]; question_text[label="text"]; hint; difficulty} [arrowhead=none]
+  Question -> {question_id[label=<<u>id</u>>]; question_text[label="text"]; hint; difficulty; detailed_explanation} [arrowhead=none]
 
-  // question -> assessment is one-to-many, total participation for both
-  question_assessment[shape=diamond]
-  Assessment -> question_assessment[style=bold]
-  Question -> question_assessment[arrowhead=none, style=bold]
+  // exercise -> question is one-to-many, total participation for both
+  exercise_questions[shape=diamond]
+  Exercise -> exercise_questions[arrowhead=none, style=bold]
+  Question -> exercise_questions[style=bold]
 
   Answer[shape=box]
   Answer -> {answer_id[label=<<u>id</u>>]; correct; answer_text[label="text"]; explanation;} [arrowhead=none]
@@ -67,16 +73,16 @@ digraph G {
 
 
   Attempt[shape=box]
-  Attempt -> {attempt_id[label=<<u>id</u>>]; attempt_number; submission_time} [arrowhead=none]
+  Attempt -> {attempt_id[label=<<u>id</u>>]; submission_time} [arrowhead=none]
 
   // student -> attempt is one-to-many, total participation for attempt
   student_attempt[shape=diamond]
-  student_attempt -> {Student;Assessment} [arrowhead=none]
+  student_attempt -> {Student;Exercise} [arrowhead=none]
   Attempt -> student_attempt [style=bold]
   
 
   attempt_question_answer[shape=diamond]
-  attempt_question_answer -> {student_explanation; partial_credit; Answer; Question; Attempt} [arrowhead=none]
+  attempt_question_answer -> {student_explanation; partial_credit; order; Answer; Question; Attempt} [arrowhead=none]
 
 
 }
