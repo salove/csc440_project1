@@ -1,0 +1,83 @@
+// dot -Tpng er_diagram.gv > diagram.png
+
+digraph G {
+
+  User[shape=box]
+
+  User -> {user_name[label=<<u>name</u>>]; password} [arrowhead=none]
+
+  Professor[shape=box]
+  Student[shape=box]
+  Teaching_Assistant[shape=box]
+
+  prof_student_isa_user_relation[shape=triangle, label="ISA"]
+  ta_isa_student_relation[shape=triangle,label="ISA"]
+  
+  prof_student_isa_user_relation -> {User; Professor; Student} [arrowhead=none]
+
+  ta_isa_student_relation -> {Student; Teaching_Assistant} [arrowhead=none]
+
+  Course[shape=box]
+  Course -> {course_name[label="name"]; room; token[label=<<u>token</u>>]; start_date; end_date} [arrowhead=none]
+
+  // course -> professor is one-to-many, total participation for course
+  course_professor[shape=diamond]
+  Course -> course_professor[style=bold]
+  course_professor -> Professor [arrowhead=none]
+
+  course_ta[shape=diamond]
+  course_ta -> {Teaching_Assistant; Course} [arrowhead=none]
+
+  student_course[shape=diamond]
+  student_course -> {Student; Course} [arrowhead=none]
+
+
+  Topic[shape=box]
+
+  // course -> topic is one-to-many, total participation for topic
+  course_topic[shape=diamond]
+  course_topic -> Course [arrowhead=none]
+  Topic -> course_topic [style=bold]
+  Topic -> {topic_id[label=<<u>id</u>>]; topic_name } [arrowhead=none]
+
+  Assessment[shape=box]
+  Assessment -> {assesment_id[label=<<u>id</u>>]; title} [arrowhead=none]
+
+  // course -> assessment is one-to-many, total participation for assessments
+  course_assessment[shape=diamond]
+  course_assessment -> Course [arrowhead=none]
+  Assessment -> course_assessment [style=bold]
+
+
+  Question[shape=box]
+  Question -> {question_id[label=<<u>id</u>>]; question_text[label="text"]; hint; difficulty} [arrowhead=none]
+
+  // question -> assessment is one-to-many, total participation for both
+  question_assessment[shape=diamond]
+  Assessment -> question_assessment[style=bold]
+  Question -> question_assessment[arrowhead=none, style=bold]
+
+  Answer[shape=box]
+  Answer -> {answer_id[label=<<u>id</u>>]; correct; answer_text[label="text"]; explanation;} [arrowhead=none]
+
+  // question -> answer is one-to-many, total participation for both
+  question_answer[shape=diamond]
+  question_answer -> Question [arrowhead=none, style=bold]
+  Answer -> question_answer [style=bold]
+
+
+  Attempt[shape=box]
+  Attempt -> {attempt_id[label=<<u>id</u>>]; attempt_number; submission_time} [arrowhead=none]
+
+  // student -> attempt is one-to-many, total participation for attempt
+  student_attempt[shape=diamond]
+  student_attempt -> {Student;Assessment} [arrowhead=none]
+  Attempt -> student_attempt [style=bold]
+  
+
+  attempt_question_answer[shape=diamond]
+  attempt_question_answer -> {student_explanation; partial_credit; Answer; Question; Attempt} [arrowhead=none]
+
+
+}
+
