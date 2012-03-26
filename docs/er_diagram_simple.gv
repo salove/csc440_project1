@@ -1,0 +1,127 @@
+// dot -Tpng er_diagram.gv > diagram.png
+
+// a simple er diagram without any attributes, only relations
+
+digraph G {
+
+//  ratio=compress;
+//  size="8.5,11";
+//  orientation=landscape;
+
+
+
+    User[shape=box]
+  
+//    User -> {user_name[label=<<u>name</u>>]; password; first_name; last_name; dob} [arrowhead=none]
+  
+    Professor[shape=box]
+    Student[shape=box]
+    Teaching_Assistant[shape=box]
+  
+    prof_student_isa_user_relation[shape=triangle, label="ISA"]
+    ta_isa_student_relation[shape=triangle,label="ISA"]
+    
+    prof_student_isa_user_relation -> {User; Professor; Student} [arrowhead=none]
+  
+    ta_isa_student_relation -> {Student; Teaching_Assistant} [arrowhead=none]
+
+  Course[shape=box]
+//  Course -> {course_name[label="name"]; room; token[label=<<u>token</u>>]; course_start_date[label="start_date"]; course_end_date[label="end_date"]} [arrowhead=none]
+
+  // course -> professor is one-to-many, total participation for course
+  course_professor[shape=diamond]
+  Course -> course_professor[style=bold]
+  course_professor -> Professor [arrowhead=none]
+
+  // course -> TA is one-to-many, total participation for course
+  course_ta[shape=diamond]
+  course_ta -> Teaching_Assistant [arrowhead=none]
+  course_ta -> Course [arrowhead=none, style=bold]
+
+  // student -> course is many to many
+  enrolled[shape=diamond]
+  enrolled -> {Student; Course} [arrowhead=none]
+
+
+  Topic[shape=box]
+
+  // course -> topic is one-to-many, total participation for topic
+  course_topic[shape=diamond]
+  course_topic -> Course [arrowhead=none]
+  Topic -> course_topic [style=bold]
+//  Topic -> {topic_id[label=<<u>id</u>>]; topic_name } [arrowhead=none]
+
+
+
+  Exercise[shape=box]
+
+//  Exercise -> {exercise_id[label=<<u>id</u>>]; title; inclass_home; seed; correct_points; incorrect_points; score_method; retries; start_date; end_date;} [arrowhead=none]
+
+/*
+  // Exercise -> Topic is many-to-many
+  exercise_topic[shape=diamond]
+  Exercise -> exercise_topic[arrowhead=none]
+  Topic -> exercise_topic[arrowhead=none]
+*/
+
+  // course -> exercise is one-to-many, total participation for exercises
+  course_exercise[shape=diamond]
+  course_exercise -> Course [arrowhead=none]
+  Exercise -> course_exercise [style=bold]
+
+
+  Question[shape=box]
+//  Question -> {question_id[label=<<u>id</u>>]; question_text[label="text"]; hint; difficulty; detailed_explanation} [arrowhead=none]
+
+  // exercise -> question is one-to-many, total participation for both
+  exercise_questions[shape=diamond]
+  Exercise -> exercise_questions[arrowhead=none, style=bold, weight=10]
+  Question -> exercise_questions[style=bold, weight=10]
+
+  Answer[shape=box]
+//  Answer -> {answer_id[label=<<u>id</u>>]; correct; answer_text[label="text"]; explanation;} [arrowhead=none]
+
+  // question -> answer is one-to-many, total participation for both
+  question_answer[shape=diamond]
+  question_answer -> Question [arrowhead=none, style=bold, weight=10]
+  Answer -> question_answer [style=bold, weight=10]
+
+
+  Attempt[shape=box]
+//  Attempt -> {attempt_id[label=<<u>id</u>>]; submission_time} [arrowhead=none]
+
+  // Attempt -> Generated_Question is one-to many, total participation for both
+  attempt_generated_questions[shape=diamond]
+  Attempt -> attempt_generated_questions[style=bold, arrowhead=none]
+  Generated_Question -> attempt_generated_questions[style=bold]
+
+
+  // A generated question is a question with randomly-chosen answers, one of which student selects
+  Generated_Question[shape=box]
+//  Generated_Question -> {student_explanation; partial_credit; order}[arrowhead=none]
+
+
+  // Generated_Question -> Question is many-to-one, total participation for the former
+  generated_question[shape=diamond]
+  Generated_Question -> generated_question[style=bold]
+  generated_question -> Question[arrowhead=none]
+
+  // Generated_Question -> Answer is many-to-many, total participation for the former
+  generated_question_answers[shape=diamond]
+  generated_question_answers -> Answer [arrowhead=none]
+  Generated_Question -> generated_question_answers [style=bold, arrowhead=none]
+
+  // Generated_Question -> selected_answer is many-to one, total participation for the former
+  selected_answer[shape=diamond]
+  Generated_Question -> selected_answer[style=bold]
+  Answer -> selected_answer[arrowhead=none]
+
+
+  // student -> attempt is one-to-many, total participation for attempt
+  student_attempt[shape=diamond]
+  student_attempt -> {Student;Exercise} [arrowhead=none]
+  Attempt -> student_attempt [style=bold]
+  
+
+}
+
