@@ -90,6 +90,11 @@ digraph G {
   Attempt[shape=box]
   Attempt -> {attempt_id[label=<<u>id</u>>]; submission_time} [arrowhead=none]
 
+  // Attempt -> Exercise is many-to-one, total participation for the former
+  attempt_exercise[shape=diamond]
+  Attempt -> attempt_exercise[style=bold]
+  Exercise -> attempt_exercise[arrowhead=none]
+
   // Attempt -> Generated_Question is one-to many, total participation for both
   attempt_generated_questions[shape=diamond]
   Attempt -> attempt_generated_questions[style=bold, arrowhead=none]
@@ -119,7 +124,7 @@ digraph G {
 
   // student -> attempt is one-to-many, total participation for attempt
   student_attempt[shape=diamond]
-  student_attempt -> {Student;Exercise} [arrowhead=none]
+  student_attempt -> {Student} [arrowhead=none]
   Attempt -> student_attempt [style=bold]
   
 
