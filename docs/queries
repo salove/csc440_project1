@@ -1,0 +1,30 @@
+
+// get pending attempt for exercise
+select * from attempts
+where student_id = $
+and exercise_id = $
+and submission_time is NULL
+
+
+// Number of retries
+select Count(*) from attempts
+where student_id = $
+and exercise_id = $
+
+// info about retries
+select * from attempts
+where student_id = $
+and exercise_id = $
+
+// generate random questions
+select * from questions
+where exercise_id = $
+order by random(select seed from exercises where exercises.id = $)
+
+// generate random answers
+select * from answers
+where question_id = $
+and correct <> 0
+
+// insert random questions into generated_questions
+insert into generated_question (order, question_id) values($, $)

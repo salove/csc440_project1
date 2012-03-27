@@ -11,7 +11,7 @@ digraph G {
 
     User[shape=box]
   
-    User -> {user_name[label=<<u>name</u>>]; password; first_name; last_name; dob} [arrowhead=none]
+    User -> {user_name[label=<<u>username</u>>]; password; first_name; middle_name; last_name; dob} [arrowhead=none]
   
     Professor[shape=box]
     Student[shape=box]
