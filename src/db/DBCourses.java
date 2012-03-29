@@ -86,7 +86,7 @@ public class DBCourses implements Courses {
 				Instructor.userId);
 		stmt = this.connection.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
-		List<Course> courses = new ArrayList();
+		List<Course> courses = new ArrayList<Course>();
 
 		while (rs.next) {
 			// FIXME course topic in constructor
