@@ -1,10 +1,13 @@
 package db;
 
-import java.util.List;
+import java.util.*;
+import java.sql.*;
 
+import common.Course;
 import common.Exercise;
 import common.ExerciseAttempt;
 import common.Student;
+import common.User;
 
 public class DBExerciseAttempts implements ExerciseAttempts {
 
@@ -34,7 +37,7 @@ public class DBExerciseAttempts implements ExerciseAttempts {
 				+ "exercise_id int not null,"
 				+ "constraint fk_attempt_exercise foreign key (exercise_id) references exercises(id)"
 				+ ");";
-		stmt = this.connection.createStatement();
+		Statement stmt = this.connection.createStatement();
 		stmt.executeUpdate(query);
 		stmt.close();
 
@@ -55,16 +58,16 @@ public class DBExerciseAttempts implements ExerciseAttempts {
 	@Override
 	public List<ExerciseAttempt> getExerciseAttemptsForExercise(Exercise e) {
 		String query = String.format(
-				"select * from attempts where exercise_id = %s", e.id);
+				"select * from attempts where exercise_id = %s", e.getId());
 
-		stmt = this.connection.createStatement();
+		Statement stmt = this.connection.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 
 		List<ExerciseAttempt> attempts = new ArrayList<ExerciseAttempt>();
 		while (rs.next()) {
 			Course c = new Course(rs.getString("course_token"));
 			ExerciseAttempt ea = new ExerciseAttempt(c, new Student(
-					rs.getInt("student_id")), rs.getDate("submission_time"),
+					new User(rs.getInt("student_id"), User.ROLE_STUDENT), rs.getDate("submission_time"),
 					new Exercise(c, rs.getInt("exercise_id")));
 			attempts.add(ea);
 		}
@@ -72,7 +75,6 @@ public class DBExerciseAttempts implements ExerciseAttempts {
 		stmt.close();
 		rs.close();
 		
-		return ea;
+		return attempts;
 	}
-
 }
