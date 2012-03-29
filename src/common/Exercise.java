@@ -19,10 +19,10 @@ public class Exercise {
     private long randomizationSeed;
     private int scoreSelectionMethod;
     private Course course;
-    private String id;
+    private int id;
     private Key key;
 
-    public Exercise(Course course, String id) {
+    public Exercise(Course course, int id) {
         this.course = course;
         this.id = id;
         this.key = new Key(course.getKey(), id);
@@ -40,7 +40,7 @@ public class Exercise {
         return this.endDate;
     }
 
-    public String getId() {
+    public int getId() {
         return this.id;
     }
 

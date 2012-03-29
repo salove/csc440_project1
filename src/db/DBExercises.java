@@ -59,9 +59,8 @@ public class DBExercises implements Exercises {
     	String query = String.format("select * from exercises where course_token = %s and id = %s;", course.id, id);
 		stmt = this.connection.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
-		// FIXME id is int, not string, but constructor asks for string
 		// FIXME course constructor requires a topic for some reason
-		Exercise e = new Exercise(new Course(rs.getString("course_token")), rs.getString("id"));
+		Exercise e = new Exercise(new Course(rs.getString("course_token")), rs.getInt("id"));
 		// FIXME date type in constructor
 		e.setStartDate(rs.getDate("start_date"));
 		e.setEndDate(rs.getDate("end_date"));
@@ -82,12 +81,29 @@ public class DBExercises implements Exercises {
             throws RecordNotFoundException
     {
         // TODO Auto-generated method stub
-    	String query = "";
+    	String query = String.format("select * from exercises where course_token = %s", course.token);
 		stmt = this.connection.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
+		
+		List<Exercise> exercises = new ArrayList<Exercise>(); 
+		
+		while(rs.next()){
+			Exercise e = new Exercise(course, rs.getInt("id"));
+			// FIXME date type in constructor
+			e.setStartDate(rs.getDate("start_date"));
+			e.setEndDate(rs.getDate("end_date"));
+			e.setRandomizationSeed(rs.getInt("seed"));
+			e.setRetriesAllowed(rs.getInt("retries"));
+			e.setScoreSelectionMethod(rs.getInt("score_method"));
+			e.setPointsPerCorrectAnswer(rs.getInt("correct_points"));
+			e.setPointsPerWrongAnswer(rs.getInt("incorrect_points"));
+			// FIXME add name field
+			exercises.add(e);
+		}
+		
 		stmt.close();
 		rs.close();
-        return null;
+        return e;
     }
 
     @Override
