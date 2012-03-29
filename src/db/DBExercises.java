@@ -24,13 +24,31 @@ public class DBExercises implements Exercises {
     @Override
     public void dropTables() {
         // TODO Auto-generated method stub
-
+    	String query = "drop table exercises;"
+    	stmt = this.connection.createStatement();
+		stmt.executeUpdate(query);
+		stmt.close();
     }
 
     @Override
     public void createTables() {
         // TODO Auto-generated method stub
-
+		String query = "create table exercises ("
+				+ "id int primary key,"
+				+ "name varchar(30) not null,"
+				+ "start_date date not null,"
+				+ "end_date date not null,"
+				+ "seed int not null,"
+				+ "correct_points int not null,"
+				+ "incorrect points int not null,"
+				+ "score_method int not null,"
+				+ "retries int not null,"
+				+ "course_token int not null,"
+				+ "constraint fk_exercise_course foreign key (course_token) references courses(token)"
+				+ ");";
+		stmt = this.connection.createStatement();
+		stmt.executeUpdate(query);
+		stmt.close();
     }
 
     @Override
@@ -38,7 +56,25 @@ public class DBExercises implements Exercises {
             throws ConnectionFailedException, RecordNotFoundException
     {
         // TODO Auto-generated method stub
-        return null;
+    	String query = String.format("select * from exercises where course_token = %s and id = %s;", course.id, id);
+		stmt = this.connection.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		// FIXME id is int, not string, but constructor asks for string
+		// FIXME course constructor requires a topic for some reason
+		Exercise e = new Exercise(new Course(rs.getString("course_token")), rs.getString("id"));
+		// FIXME date type in constructor
+		e.setStartDate(rs.getDate("start_date"));
+		e.setEndDate(rs.getDate("end_date"));
+		e.setRandomizationSeed(rs.getInt("seed"));
+		e.setRetriesAllowed(rs.getInt("retries"));
+		e.setScoreSelectionMethod(rs.getInt("score_method"));
+		e.setPointsPerCorrectAnswer(rs.getInt("correct_points"));
+		e.setPointsPerWrongAnswer(rs.getInt("incorrect_points"));
+		// FIXME add name field
+		
+		stmt.close();
+		rs.close();
+        return e;
     }
 
     @Override
@@ -46,6 +82,11 @@ public class DBExercises implements Exercises {
             throws RecordNotFoundException
     {
         // TODO Auto-generated method stub
+    	String query = "";
+		stmt = this.connection.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		stmt.close();
+		rs.close();
         return null;
     }
 
