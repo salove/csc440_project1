@@ -3,11 +3,7 @@ package db;
 import java.util.*;
 import java.sql.*;
 
-import common.Course;
-import common.Exercise;
-import common.ExerciseAttempt;
-import common.Student;
-import common.User;
+import common.*;
 
 public class DBExerciseAttempts implements ExerciseAttempts {
 
@@ -66,15 +62,16 @@ public class DBExerciseAttempts implements ExerciseAttempts {
 		List<ExerciseAttempt> attempts = new ArrayList<ExerciseAttempt>();
 		while (rs.next()) {
 			Course c = new Course(rs.getString("course_token"));
-			ExerciseAttempt ea = new ExerciseAttempt(c, new Student(
-					new User(rs.getInt("student_id"), User.ROLE_STUDENT), rs.getDate("submission_time"),
-					new Exercise(c, rs.getInt("exercise_id")));
+			ExerciseAttempt ea = new ExerciseAttempt(c, new Student(new User(
+					rs.getInt("student_id"), User.ROLE_STUDENT)),
+					new C_Date(rs.getDate("submission_time")), new Exercise(c,
+							rs.getInt("exercise_id")));
 			attempts.add(ea);
 		}
-		
+
 		stmt.close();
 		rs.close();
-		
+
 		return attempts;
 	}
 }

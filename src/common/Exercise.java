@@ -1,5 +1,6 @@
 package common;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +106,15 @@ public class Exercise {
     public void setStartDate(int month, int date, int year) {
         this.startDate = new C_Date(month, date, year);
     }
+    
+    public void setStartDate(Date date){
+    	this.startDate = new C_Date(date);
+    }
+
+	public void setEndDate(Date date) {
+		this.endDate = new C_Date(date);
+		
+	}
 
     
 }

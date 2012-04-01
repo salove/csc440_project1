@@ -58,7 +58,7 @@ public class DBCourses implements Courses {
 		c.setEndDate(rs.getDate("end_date"));
 		// FIXME instructor constructor
 		c.setInstructor(new Instructor(new User(rs.getInt("professor_id"),
-				ROLE_INSTRUCTOR)));
+				User.ROLE_INSTRUCTOR)));
 		rs.close();
 		stmt.close();
 		return c;
@@ -90,7 +90,7 @@ public class DBCourses implements Courses {
 
 		while (rs.next()) {
 			// FIXME course topic in constructor
-			Course c = new Course(rs.String("token"));
+			Course c = new Course(rs.getString("token"));
 			// FIXME date interface to C_Date
 			c.setStartDate(rs.getDate("start_date"));
 			c.setEndDate(rs.getDate("end_date"));

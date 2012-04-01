@@ -1,5 +1,6 @@
 package common;
 import java.util.Calendar;
+import java.sql.Date;
 
 public class C_Date {
 	Calendar calendar;
@@ -12,5 +13,11 @@ public class C_Date {
 		this();
 		calendar.clear();
 		calendar.set(year, month, date);
+	}
+	
+	public C_Date(Date d){
+		this();
+		calendar.clear();
+		calendar.setTime(d);
 	}
 }

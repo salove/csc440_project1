@@ -38,7 +38,8 @@ public class UTExercises implements Exercises {
     public Exercise getExercise(Course course, String id) throws RecordNotFoundException {
         for (Exercise e:list) {
             if (e.getCourse().getKey().equals(course)) {
-                if(e.getId().equals(id)) {
+            	// FIXME better type casting
+                if((e.getId() + "").equals(id)) {
                     return e;
                 }
             }

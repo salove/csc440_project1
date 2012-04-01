@@ -58,7 +58,7 @@ public class DBExercises implements Exercises {
 		// TODO Auto-generated method stub
 		String query = String.format(
 				"select * from exercises where course_token = %s and id = %s;",
-				course.id, id);
+				course.getToken(), id);
 		Statement stmt = this.connection.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 		// FIXME course constructor requires a topic for some reason
@@ -83,9 +83,9 @@ public class DBExercises implements Exercises {
 	public List<Exercise> getExercisesByCourse(Course course)
 			throws RecordNotFoundException {
 		// TODO Auto-generated method stub
-		String query = String
-				.format("select * from exercises where course_token = %s",
-						course.getToken());
+		String query = String.format(
+				"select * from exercises where course_token = %s",
+				course.getToken());
 		Statement stmt = this.connection.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 
