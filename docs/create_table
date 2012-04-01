@@ -1,0 +1,121 @@
+create table courses (
+token int primary key
+start_date date not null,
+end_date date not null,
+name varchar(30) not null,
+room varchar(30) not null,
+professor_id int not null,
+constraint fk_course_professor foreign key (professor_id) references professors(id)
+);
+
+create table exercises (
+id int primary key,
+name varchar(30) not null,
+start_date date not null,
+end_date date not null,
+seed int not null,
+correct_points int not null,
+incorrect points int not null,
+score_method int not null,
+retries int not null,
+course_token int not null,
+constraint fk_exercise_course foreign key (course_token) references courses(token)
+);
+
+create table questions (
+id int primary key,
+text varchar(200) not null,
+hint varchar(200),
+detailed_explanation varchar(200),
+difficulty int not null,
+exercise_id int not null,
+constraint fk_question_exercise foreign key (exercise_id) references exercises(id)
+);
+
+create table answers (
+id int primary key,
+text varchar(200) not null,
+explanation varchar(200) not null,
+correct int not null,
+question_id int not null,
+constraint fk_answer_question foreign key (question_id) references questions(id)
+);
+
+
+create table attempts (
+id int primary key,
+submission_time DATE,  
+student_id int not null,
+exercise_id int not null,
+constraint fk_attempt_exercise foreign key (exercise_id) references exercises(id)
+);
+
+
+ create table users (
+ username varchar(10) primary key,
+ password varchar(30) not null,
+ first_name varchar(30) not null,
+ middle_name varchar(30),
+ last_name varchar(30) not null,
+ dob DATE     
+ );
+
+create table generated_questions (
+id int primary key,
+question_order int not null,
+partial_credit int default 0,
+student_explanation varchar(100),
+selected_answer_id int,
+question_id int not null,
+attemp_id int not null,
+constraint fk_generated_question foreign key (question_id) references questions(id),
+constraint fk_selected_answer foreign key (selected_answer_id) references answers(id)
+constraint fk_generated_question_attempt foreign key (attempt_id) references attempts(id))
+);
+
+create table generated_questions_answers (
+generated_question_id int not null,
+answer_id int not null,
+constraint fk_answer_generated_question foreign key (generated_question_id) references generated_questions(id),
+constraint fk_answer_id foreign key (answer_id) references answers(id)
+);
+
+create table professors (
+id int primary key,
+user_id varchar(10) not null,
+constraint fk_prof_uid foreign key (user_id) references users(username)
+);
+
+
+create table students (
+id int primary key,
+user_id varchar(10) not null,
+constraint fk_student_uid foreign key (user_id) references users(username)
+);
+
+create table enrolled (
+student_id int not null,
+constraint fk_enrolled_student foreign key (student_id) references students(id),
+course_token int not null,
+constraint fk_enrolled_course foreign key (course_token) references courses(token) 
+);
+
+
+create table teaching_assistants (
+id int primary key,
+student_id int not null
+constraint fk_ta_student_id foreign key (student_id) references students(id)
+);
+
+
+create table course_teaching_assistant (
+course_token int not null,
+ta_id int not null,
+constraint fk_course_ta foreign key (course_token) references courses(token)
+);
+
+create table students (
+id int primary key,
+user_id varchar(10) not null,
+constraint fk_student_uid foreign key (user_id) references users(username)
+);
