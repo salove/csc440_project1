@@ -35,10 +35,10 @@ public class UTExercises implements Exercises {
     }
 
     @Override
-    public Exercise getExercise(Course course, String id) throws RecordNotFoundException {
+    public Exercise getExercise(Course course, int id) throws RecordNotFoundException {
         for (Exercise e:list) {
             if (e.getCourse().getKey().equals(course)) {
-                if(e.getId().equals(id)) {
+                if(e.getId()==id) {
                     return e;
                 }
             }
@@ -70,4 +70,5 @@ public class UTExercises implements Exercises {
 
     }
 
+	
 }

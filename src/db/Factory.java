@@ -1,4 +1,6 @@
 package db;
+import java.sql.SQLException;
+
 import exception.ConnectionFailedException;
 
 public class Factory {
@@ -67,7 +69,7 @@ public class Factory {
 	    }
 	}
 	
-	public void createTables() {
+	public void createTables() throws SQLException {
 		
 		getUsers().createTables();
 		getCourseSubjects().createTables();
@@ -77,7 +79,7 @@ public class Factory {
 		
 	}
 	
-	public void dropTables() {
+	public void dropTables() throws SQLException {
 		
 	    getExerciseAttempts().dropTables();
 	    getExercises().dropTables();

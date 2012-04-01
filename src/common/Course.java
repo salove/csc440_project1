@@ -89,5 +89,16 @@ public class Course {
 		return subject.getTopics();
 	}
 	
+	public CourseSubject getSubject() {
+		return subject;
+	}
+
+	public void setStartDate(java.sql.Date date) {
+		this.startDate=new C_Date(date);
+	}
+	
+	public void setEndDate(java.sql.Date date) {
+		this.endDate=new C_Date(date);
+	}
 	
 }

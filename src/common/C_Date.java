@@ -1,4 +1,5 @@
 package common;
+
 import java.util.Calendar;
 
 public class C_Date {
@@ -12,5 +13,11 @@ public class C_Date {
 		this();
 		calendar.clear();
 		calendar.set(year, month, date);
+	}
+
+	@SuppressWarnings("deprecation")
+	public C_Date(java.sql.Date date) {
+		
+		this(date.getMonth(),date.getDate(),date.getYear());
 	}
 }

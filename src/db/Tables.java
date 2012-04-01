@@ -1,7 +1,9 @@
 package db;
 
+import java.sql.SQLException;
+
 public interface Tables {
-	void dropTables();
-	void createTables();
+	void dropTables() throws SQLException;
+	void createTables() throws SQLException;
 	
 }

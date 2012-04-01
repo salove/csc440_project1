@@ -3,7 +3,9 @@ import exception.*;
 
 public class Instructor extends User {
 
-	Instructor(User user) throws RoleException {
+	public Instructor(User user) throws RoleException {
 		super(user,ROLE_INSTRUCTOR);
 	}
+	
+	
 }

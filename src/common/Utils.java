@@ -41,4 +41,13 @@ public class Utils {
 	        return (min+r.nextInt(max-min+1));
 	    }    
 	}
+	
+	public static int str2int(String s) {
+	    try {
+	        int i=Integer.parseInt(s);
+	        return i;
+	    } catch (NumberFormatException e) {
+	        return -1;
+	    }
+	}
 }

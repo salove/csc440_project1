@@ -17,6 +17,14 @@ public class User {
 	public static final int ROLE_TA=8;
 	
 		
+	public User(String userID, String name, int role, String pwhash) {
+		this.name=name;
+		this.userId=userID;
+		this.role=role;
+		this.pwHash=pwhash;
+				
+	}
+	
 	User(User user) {
 		this.name=user.name;
 		this.role=user.role;

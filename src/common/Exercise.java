@@ -106,5 +106,13 @@ public class Exercise {
         this.startDate = new C_Date(month, date, year);
     }
 
+    @SuppressWarnings("deprecation")
+	public void setStartDate(java.sql.Date d) {
+    	setStartDate(d.getMonth(),d.getDate(),d.getYear());
+    }
     
+    @SuppressWarnings("deprecation")
+	public void setEndDate(java.sql.Date d) {
+    	setEndDate(d.getMonth(),d.getDate(),d.getYear());
+    }
 }

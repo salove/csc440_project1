@@ -11,7 +11,6 @@ import exception.RecordNotFoundException;
 
 public class DBExercises implements Exercises {
 
-	@SuppressWarnings("unused")
 	private Connection connection;
 
 	private DBExercises(Connection connection) {
@@ -23,7 +22,7 @@ public class DBExercises implements Exercises {
 	}
 
 	@Override
-	public void dropTables() {
+	public void dropTables() throws SQLException {
 		// TODO Auto-generated method stub
 		String query = "drop table exercises;";
 		Statement stmt = this.connection.createStatement();
@@ -32,7 +31,7 @@ public class DBExercises implements Exercises {
 	}
 
 	@Override
-	public void createTables() {
+	public void createTables() throws SQLException {
 		// TODO Auto-generated method stub
 		String query = "create table exercises ("
 				+ "id int primary key,"
@@ -52,13 +51,12 @@ public class DBExercises implements Exercises {
 		stmt.close();
 	}
 
-	@Override
 	public Exercise getExercise(Course course, String id)
-			throws ConnectionFailedException, RecordNotFoundException {
+			throws ConnectionFailedException, RecordNotFoundException, SQLException {
 		// TODO Auto-generated method stub
 		String query = String.format(
 				"select * from exercises where course_token = %s and id = %s;",
-				course.id, id);
+				course.getToken(), id);
 		Statement stmt = this.connection.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 		// FIXME course constructor requires a topic for some reason
@@ -81,7 +79,7 @@ public class DBExercises implements Exercises {
 
 	@Override
 	public List<Exercise> getExercisesByCourse(Course course)
-			throws RecordNotFoundException {
+			throws RecordNotFoundException, SQLException {
 		// TODO Auto-generated method stub
 		String query = String
 				.format("select * from exercises where course_token = %s",
@@ -114,6 +112,13 @@ public class DBExercises implements Exercises {
 	public void putExercise(Exercise exercise) throws ConnectionFailedException {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Exercise getExercise(Course course, int i)
+			throws ConnectionFailedException, RecordNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

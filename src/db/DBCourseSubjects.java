@@ -1,5 +1,7 @@
 package db;
 
+import java.util.List;
+
 import common.CourseSubject;
 
 import exception.ConnectionFailedException;
@@ -45,6 +47,13 @@ public class DBCourseSubjects implements CourseSubjects {
 			throws ConnectionFailedException {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	@Override
+	public List<CourseSubject> getAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

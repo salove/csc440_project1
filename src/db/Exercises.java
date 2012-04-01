@@ -1,5 +1,6 @@
 package db;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import common.*;
@@ -9,8 +10,8 @@ import exception.RecordNotFoundException;
 
 public interface Exercises extends Tables {
 	
-	Exercise getExercise(Course course, String id) throws ConnectionFailedException, RecordNotFoundException;
-	List<Exercise> getExercisesByCourse(Course course) throws RecordNotFoundException;
+	Exercise getExercise(Course course, int i) throws ConnectionFailedException, RecordNotFoundException;
+	List<Exercise> getExercisesByCourse(Course course) throws RecordNotFoundException, SQLException;
 	void putExercise(Exercise exercise) throws ConnectionFailedException;
 
 }

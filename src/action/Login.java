@@ -1,5 +1,6 @@
 package action;
 
+import ui.UI;
 import common.*;
 import db.Factory;
 import db.Users;
@@ -8,11 +9,8 @@ import exception.LoginFailedException;
 import exception.RecordNotFoundException;
 
 public class Login {
-	public Session login(String userId, String pw) throws LoginFailedException {
-		return login(userId,pw,false);
-	}
 	
-	public Session login(String userId, String pw, boolean unitTest) throws LoginFailedException {
+	public static Session login(UI ui, String userId, String pw, boolean unitTest) throws LoginFailedException {
 		try {
 			Factory factory=Factory.getInstance(unitTest);
 			Users dbUsers=factory.getUsers();

@@ -6,6 +6,7 @@ import java.util.List;
 import common.AnswerAttempt;
 import common.ExerciseAttempt;
 import common.Question;
+import exception.RecordNotFoundException;
 
 public class UTAnswerAttempts implements AnswerAttempts {
 
@@ -25,28 +26,34 @@ public class UTAnswerAttempts implements AnswerAttempts {
     
     @Override
     public void dropTables() {
-        // TODO Auto-generated method stub
+        list.clear();
 
     }
 
     @Override
     public void createTables() {
-        // TODO Auto-generated method stub
+       // Nothing to do for UT
 
     }
 
     @Override
     public void addAnswerAttempt(AnswerAttempt answerAttempt) {
-        // TODO Auto-generated method stub
+        list.add(answerAttempt);
 
     }
 
     @Override
     public AnswerAttempt getAnswerAttemptForExerciseAttemptAndQuestion(
-            ExerciseAttempt exerciseAttempt, Question question)
+            ExerciseAttempt exerciseAttempt, Question question) throws RecordNotFoundException
     {
-        // TODO Auto-generated method stub
-        return null;
+       for (AnswerAttempt aa:list) {
+    	   if ( (aa.getExerciseAttempt()==exerciseAttempt) &&
+    			(aa.getQuestion()==question) ) {
+    		   return aa;
+    	   }
+       }
+       
+       throw new RecordNotFoundException("No answer attempt found for given exercise and question");
     }
 
 }

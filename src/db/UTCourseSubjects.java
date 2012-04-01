@@ -1,6 +1,7 @@
 package db;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import common.CourseSubject;
 
@@ -56,5 +57,12 @@ public class UTCourseSubjects implements CourseSubjects {
 		list.add(courseSubject);
 
 	}
+
+	@Override
+	public List<CourseSubject> getAll() {
+		return list;
+	}
+	
+	
 
 }
