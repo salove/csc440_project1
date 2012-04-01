@@ -14,9 +14,15 @@ public class Course {
 	CourseSubject subject;
 	Key key;
 	
+	// FIXME make constructor public?
 	Course(String token, CourseSubject courseSubject) {
 		this.token=token;
 		this.subject=courseSubject;
+		key=new Key(token);
+	}
+	
+	public Course(String token) {
+		this.token=token;
 		key=new Key(token);
 	}
 	

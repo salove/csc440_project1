@@ -11,10 +11,10 @@ public class User {
 	private String pwHash="";
 	private Key key;
 	
-	static final int ROLE_ADMINISTRATOR=1;
-	static final int ROLE_INSTRUCTOR=2;
-	static final int ROLE_STUDENT=4;
-	static final int ROLE_TA=8;
+	public static final int ROLE_ADMINISTRATOR=1;
+	public static final int ROLE_INSTRUCTOR=2;
+	public static final int ROLE_STUDENT=4;
+	public static final int ROLE_TA=8;
 	
 		
 	User(User user) {

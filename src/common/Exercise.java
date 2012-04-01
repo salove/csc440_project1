@@ -25,7 +25,8 @@ public class Exercise {
     public Exercise(Course course, int id) {
         this.course = course;
         this.id = id;
-        this.key = new Key(course.getKey(), id);
+        // FIXME ugly string type conversion
+        this.key = new Key(course.getKey(), id + "");
     }
 
     public void addQuestion(Question q) {
