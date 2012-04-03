@@ -5,18 +5,11 @@ import java.util.List;
 import java.util.Vector;
 
 import action.CourseActions;
+import action.ExerciseActions;
+import action.ExerciseAttemptActions;
 import action.FindUserActions;
 
-import common.C_Date;
-import common.CourseSubject;
-import common.Instructor;
-import common.TA;
-import common.User;
-import common.Utils;
-
-import exception.ConnectionFailedException;
-import exception.RecordNotFoundException;
-import exception.RoleException;
+import common.*;
 
 public class InstructorDialogue extends GeneralDialogue {
 	
@@ -27,7 +20,10 @@ public class InstructorDialogue extends GeneralDialogue {
 			/* 3 */ "Add a homework",
 			/* 4 */ "Find students that did not take a homework",
 			/* 5 */ "Find student scores",
-			/* 6 */ "Exit"
+			/* 6 */ "Show course subjects",
+			/* 7 */ "Show courses",
+			/* 8 */ "Show enrolled students",
+			/* 9 */ "Exit"
 			};
 	
 	private Selection instructorSelection= new Selection("Please choose one of the following: ", instructorMenu);
@@ -54,25 +50,169 @@ public class InstructorDialogue extends GeneralDialogue {
     			findStudentScores();
     			break;
     		case 6:
+    			showCourseSubjects();
+    			break;
+    		case 7:
+    			showCourses();
+    			break;
+    		case 8:
+    			showEnrolledStudents();
+    			break;
+    		case 9:
     			doExit=true;
     			break;
     		}
     	}
     }
 	
+	private void showEnrolledStudents() {
+		CourseActions ca;
+		try {
+			ca=new CourseActions(ui.getSession());
+			List<Course> courseList=ca.getAllCourses();
+			Course course=selectCourse(courseList);
+			
+			for (Student s:course.getStudentList()) {
+				ui.write("  "+formatStudent(s));
+			}
+			ui.write("\n\nPress enter to continue\n");
+			ui.readLine();
+		} catch (Exception e) {
+			ui.statusUpdate("Failed to retrieve enrolled students: " + e.getMessage());
+		}
+	}
+
+	private void showCourses() {
+		CourseActions ca;
+		try {
+			ca=new CourseActions(ui.getSession());
+			List<Course> courseList=ca.getAllCourses();
+			for (Course c:courseList) {
+				ui.write("  "+formatCourse(c));
+			}
+			ui.write("\n\nPress enter to continue\n");
+			ui.readLine();
+		} catch (Exception e) {
+			ui.statusUpdate("Failed to retrieve course subjects: " + e.getMessage());
+		}
+		
+	}
+
+	private void showCourseSubjects() {
+		CourseActions ca;
+		try {
+			ui.clear();
+			ui.write("\nCourse Subjects:\n");
+			ca = new CourseActions(ui.getSession());
+			List<CourseSubject> subjects=ca.getAllCourseSubjects();
+			for (CourseSubject s:subjects) {
+				ui.write("  "+ formatCourseSubject(s)+ "\n");
+			}
+			
+			ui.write("\n\nPress enter to continue\n");
+			ui.readLine();
+		} catch (Exception e) {
+			ui.statusUpdate("Failed to retrieve course subjects: " + e.getMessage());
+		}
+		
+	}
+
 	private void findStudentScores() {
 		
 		
+		
+		
+		try {
+			
+			ui.write("For a particular homework: ");
+			boolean forOneHW=yesNo();
+			if (forOneHW) {
+			
+			CourseActions ca=new CourseActions(ui.getSession());
+			List<Course> courseList=ca.getAllCourses();
+			Vector<Course> courseVector=new Vector<Course>(courseList);
+			Vector<String> courseNames=new Vector<String>();
+			for (Course c:courseVector) {
+				courseNames.add(c.getToken()+" - "+c.getName());
+			}
+			Selection temp=new Selection("For which course:", courseNames);
+			int courseIdx=select(temp);
+			Course selectedCourse=courseVector.get(courseIdx);
+			
+			ExerciseActions ea=new ExerciseActions(ui.getSession());
+			List<Exercise> exerciseList=ea.getForCourse(selectedCourse);
+			Vector<Exercise> exerciseVector=new Vector<Exercise>(exerciseList);
+			Vector<String> exerciseNames=new Vector<String>();
+			for (Exercise ex:exerciseVector) {
+				exerciseNames.add(""+ex.getId()+" - "+ex.getStartDate().toString());
+			}
+			Selection temp2=new Selection("For which exercise: ", exerciseNames);
+			int exerciseIdx=select(temp2);
+			
+			Exercise selectedExercise=exerciseVector.get(exerciseIdx);
+			
+			ExerciseAttemptActions eaa=new ExerciseAttemptActions(ui.getSession());
+			List<ExerciseAttempt> attempts=eaa.getExerciseAttempts(selectedExercise);
+			for(ExerciseAttempt attempt:attempts) {
+				ui.write(" More work to do here");
+			}
+			
+			} else {
+				// For all HW
+			}
+			
+			
+		} catch (Exception e) {
+			ui.statusUpdate("Failed to retrieve students missing homework: "+e.getMessage());
+		}
 	}
 
-	private void findStudentsMissingHomework() {
-		// TODO Auto-generated method stub
+	private void findStudentsMissingHomework()  {
+		ui.write("\n Find students missing homework:\n");
+		
+		
+		
+		try {
+			CourseActions ca=new CourseActions(ui.getSession());
+			List<Course> courseList=ca.getAllCourses();
+			
+			Course selectedCourse=selectCourse(courseList);
+			
+			ExerciseActions ea=new ExerciseActions(ui.getSession());
+			List<Exercise> exerciseList=ea.getForCourse(selectedCourse);
+			Exercise selectedExercise=selectExercise(exerciseList);
+			
+			
+			ExerciseAttemptActions eaa=new ExerciseAttemptActions(ui.getSession());
+			List<ExerciseAttemptActions.StudentExercisePair> results=eaa.findStudentsMissingHomework(selectedExercise);
+			if (results.isEmpty()) {
+				ui.write("There are no students missing this assignment");
+			} else {
+				for (ExerciseAttemptActions.StudentExercisePair pair:results) {
+					ui.write(" "+pair.exercise.getName()+"  "+pair.student.getUserId()+" ("+pair.student.getName()+")");
+				}
+			}
+			ui.statusUpdate("Find students missing homework completed ok");
+		} catch (Exception e) {
+			ui.statusUpdate("Failed to retrieve data: "+e.getMessage());
+		} 
 		
 	}
 
-	private void addCourseTopic() {
-		// TODO Auto-generated method stub
-		
+	private void addCourseTopic()  {
+		try {
+		CourseActions ca=new CourseActions(ui.getSession());
+		List<CourseSubject> subjects=ca.getAllCourseSubjects();
+		CourseSubject selectedSubject=selectCourseSubject(subjects);
+		ui.write("\nEnter Topic Id: ");
+		String topicId=ui.readLine();
+		ui.write("Enter Topic Name:");
+		String topicName=ui.readLine();
+		ca.addTopic(selectedSubject, topicId, topicName);
+		ui.statusUpdate("Successfully added course topic");
+		} catch (Exception e) {
+			ui.statusUpdate("Failed to add course topic: "+e.getMessage());
+		}
 	}
 
 	InstructorDialogue(UI ui) {
@@ -171,10 +311,7 @@ public class InstructorDialogue extends GeneralDialogue {
 
     }
 
-    public void addTopic() {
-
-    }
-
+    
     public void findHighestOnAHomework() {
 
     }

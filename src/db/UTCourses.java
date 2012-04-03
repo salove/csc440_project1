@@ -1,5 +1,6 @@
 package db;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,6 +113,13 @@ public class UTCourses implements Courses {
 		}
 		
 		return retVal;
+	}
+
+	@Override
+	public List<Course> getAll() throws ConnectionFailedException,
+			RecordNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

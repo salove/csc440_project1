@@ -115,4 +115,8 @@ public class Exercise {
 	public void setEndDate(java.sql.Date d) {
     	setEndDate(d.getMonth(),d.getDate(),d.getYear());
     }
+    
+    public String getName() {
+    	return (""+this.course.getToken()+"-"+this.course.getName()+"-"+this.getStartDate()+"-"+this.id);
+    }
 }

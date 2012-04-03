@@ -115,4 +115,11 @@ public class DBCourses implements Courses {
 		return null;
 	}
 
+	@Override
+	public List<Course> getAll() throws ConnectionFailedException,
+			RecordNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

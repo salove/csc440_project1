@@ -1,9 +1,13 @@
 package ui;
 
-import java.util.Calendar;
+import java.util.List;
 import java.util.Vector;
 
 import common.C_Date;
+import common.Course;
+import common.CourseSubject;
+import common.Exercise;
+import common.Student;
 import common.Utils;
 
 public class GeneralDialogue {
@@ -48,11 +52,11 @@ public class GeneralDialogue {
 				ui.write("\n\n");
 			}
 
-			for (int i=1; i<s.selections.size(); i++) {
-				ui.write(" "+i+". "+s.selections.elementAt(i-1)+"\n");
+			for (int i=0; i<s.selections.size(); i++) {
+				ui.write(" "+(i+1)+". "+s.selections.get(i)+"\n");
 			}
 			
-			ui.write(" Enter Selection: ");
+			ui.write("\n Enter Selection: ");
 			String rsp=ui.readLine();
 			int iRsp=Utils.str2int(rsp)-1;
 			if ( (iRsp>=0) && (iRsp<s.selections.size())) {
@@ -111,5 +115,63 @@ public class GeneralDialogue {
 			}
 			
 		}
+	}
+	
+	protected String formatStudent(Student s) {
+		return (s.getUserId()+" ("+s.getName()+")");
+	}
+	
+	protected String formatCourseSubject(CourseSubject s) {
+		return (s.getIdCode()+"-"+s.getName());
+	}
+	
+	protected String formatCourse(Course c) {
+		return (c.getToken()+"-"+c.getName());
+	}
+	
+	protected String formatExercise(Exercise ex) {
+		return (ex.getCourse().getToken()+"-"+ex.getId());
+	}
+	
+	protected Course selectCourse(List<Course>list) {
+		Vector<Course> courseVector=new Vector<Course>(list);
+		Vector<String> courseStrings=new Vector<String>();
+		for (Course c:courseVector) {
+			courseStrings.add(formatCourse(c));
+		}
+		
+		ui.clear();
+		Selection temp=new Selection("\nChoose one of the following courses:", courseStrings);
+		int selectIdx=select(temp);
+		
+		return courseVector.get(selectIdx);
+	}
+	
+	protected Exercise selectExercise(List<Exercise> list) {
+		Vector<Exercise> exVector=new Vector<Exercise>(list);
+		Vector<String> exStrings=new Vector<String>();
+		for (Exercise ex:exVector) {
+			exStrings.add(formatExercise(ex));
+		}
+		
+		ui.clear();
+		Selection temp=new Selection("\nChoose one of the following courses:", exStrings);
+		int selectIdx=select(temp);
+		
+		return exVector.get(selectIdx);
+	}
+	
+	protected CourseSubject selectCourseSubject(List<CourseSubject>list) {
+		Vector<CourseSubject> subjectVector=new Vector<CourseSubject>(list);
+		Vector<String> courseSubjectStrings=new Vector<String>();
+		for (CourseSubject c:subjectVector) {
+			courseSubjectStrings.add(formatCourseSubject(c));
+		}
+		
+		ui.clear();
+		Selection temp=new Selection("\nChoose one of the following course subjects:", courseSubjectStrings);
+		int selectIdx=select(temp);
+		
+		return subjectVector.get(selectIdx);
 	}
 }

@@ -43,7 +43,9 @@ public class CourseActions {
         return factory.getCourseSubjects().getAll();
     }
     
-    
+    public List<Course> getAllCourses() throws RecordNotFoundException, ConnectionFailedException, SQLException {
+        return factory.getCourses().getAll();
+    }
     
     public void addCourse(String token, String idCode,
     		C_Date startDate, C_Date endDate, 
@@ -63,4 +65,21 @@ public class CourseActions {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public void addTopic(CourseSubject subject, String id, String name) throws ConnectionFailedException {
+		Topic t=new Topic(subject,id);
+		t.setName(name);
+		
+		
+		Factory f=Factory.getInstance(Settings.checkUnitTest());
+		f.getTopics().addTopic(t);
+		
+		
+	}
+	
+	public List<Topic> getTopics(CourseSubject subject) throws ConnectionFailedException {
+		Factory f=Factory.getInstance(Settings.checkUnitTest());
+		return f.getTopics().getTopics(subject);
+	}
+	
 }

@@ -16,7 +16,6 @@ import javax.swing.JTextArea;
 import common.Session;
 import common.StatusUpdate;
 import common.User;
-import exception.LoginFailedException;
 
 public class UI extends JFrame implements StatusListener, StatusUpdate,
         KeyListener, FocusListener {
@@ -84,6 +83,7 @@ public class UI extends JFrame implements StatusListener, StatusUpdate,
 
         
         AdministratorDialogue adminDialogue= new AdministratorDialogue(this);
+        InstructorDialogue instructorDialogue = new InstructorDialogue(this);
         
         while (true) {
             LoginDialogue.login(this);
@@ -96,7 +96,7 @@ public class UI extends JFrame implements StatusListener, StatusUpdate,
                         adminDialogue.showMainDialogue();
                         break;
                     case User.ROLE_INSTRUCTOR:
-                        InstructorDialogue.showDialogue(this);
+                        instructorDialogue.showMainDialogue();
                         break;
                     case User.ROLE_STUDENT:
                         StudentDialogue.showDialogue(this);

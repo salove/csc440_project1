@@ -69,10 +69,19 @@ public class Factory {
 	    }
 	}
 	
+	public Topics getTopics() {
+		if (unitTest) {
+			return UTTopics.getInstance(connection);
+		} else {
+			return DBTopics.getInstance(connection);
+		}
+	}
+	
 	public void createTables() throws SQLException {
 		
 		getUsers().createTables();
 		getCourseSubjects().createTables();
+		getTopics().createTables();
 		getCourses().createTables();
 		getExercises().createTables();
 		getExerciseAttempts().createTables();
@@ -84,6 +93,7 @@ public class Factory {
 	    getExerciseAttempts().dropTables();
 	    getExercises().dropTables();
 		getCourses().dropTables();
+		getTopics().dropTables();
 		getCourseSubjects().dropTables();
 		getUsers().dropTables();
 		
