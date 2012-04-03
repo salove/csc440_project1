@@ -82,14 +82,18 @@ public class UI extends JFrame implements StatusListener, StatusUpdate,
         statusUpdate("Begin");
         this.requestFocus();
 
+        
+        AdministratorDialogue adminDialogue= new AdministratorDialogue(this);
+        
         while (true) {
             LoginDialogue.login(this);
+            statusUpdate("Login "+session.getUser().getUserId()+" ok.");
  
             boolean isValid = true;
             while (isValid) {
                 switch (SelectRoleDialogue.selectRole(this)) {
                     case User.ROLE_ADMINISTRATOR:
-                        AdministratorDialogue.showDialogue(this);
+                        adminDialogue.showMainDialogue();
                         break;
                     case User.ROLE_INSTRUCTOR:
                         InstructorDialogue.showDialogue(this);

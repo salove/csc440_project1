@@ -1,19 +1,85 @@
 package ui;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import action.CourseActions;
+import action.FindUserActions;
 
+import common.C_Date;
 import common.CourseSubject;
+import common.Instructor;
+import common.TA;
+import common.User;
 import common.Utils;
 
 import exception.ConnectionFailedException;
 import exception.RecordNotFoundException;
+import exception.RoleException;
 
-public class InstructorDialogue {
+public class InstructorDialogue extends GeneralDialogue {
+	
+	private final String[] instructorMenu = {
+			/* 0 */ "Add a course subject",
+			/* 1 */ "Add a course",
+			/* 2 */ "Add a course topic",
+			/* 3 */ "Add a homework",
+			/* 4 */ "Find students that did not take a homework",
+			/* 5 */ "Find student scores",
+			/* 6 */ "Exit"
+			};
+	
+	private Selection instructorSelection= new Selection("Please choose one of the following: ", instructorMenu);
+	
+	public void showMainDialogue() {
+    	for (boolean doExit=false; !doExit; ) {
+    		switch(select(instructorSelection)) {
+    		case 0:
+    			addCourseSubject();
+    			break;
+    		case 1:
+    			addCourse();
+    			break;
+    		case 2:
+    			addCourseTopic();
+    			break;
+    		case 3:
+    			addHomework();
+    			break;
+    		case 4:
+    			findStudentsMissingHomework();
+    			break;
+    		case 5:
+    			findStudentScores();
+    			break;
+    		case 6:
+    			doExit=true;
+    			break;
+    		}
+    	}
+    }
+	
+	private void findStudentScores() {
+		
+		
+	}
 
-    public static void addCourse(UI ui) {
+	private void findStudentsMissingHomework() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void addCourseTopic() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	InstructorDialogue(UI ui) {
+		super(ui);
+	}
+
+    public void addCourse()  {
         ui.clear();
         ui.write("\nAdding a new course\n");
 
@@ -25,44 +91,63 @@ public class InstructorDialogue {
                 choices.add(cs.getIdCode());
             }
 
-            ui.write("Choose the subject of the course:\n");
-            int i = 1;
-            for (String s : choices) {
-                ui.write(" " + i + ". " + s);
+            int subjectIndex=select(new Selection("Choose the course subject:", choices) );
+            String idCode=choices.elementAt(subjectIndex).toString();
+            
+            
+            ui.write("\nEnter the token for the course: ");
+            String token=ui.readLine();
+
+            ui.write("Enter the start date for the course: ");
+            C_Date startDate= askDate();
+
+            ui.write("Enter the end date for the course: ");
+            C_Date endDate= askDate();
+            
+            ui.write("Do you want to add one or more TA's: ");
+            boolean addTA=yesNo();
+            
+            List<TA> taList=new ArrayList<TA>();
+            
+            if (addTA) {
+            	FindUserActions fua=new FindUserActions(ui.getSession());
+            	
+            	Vector<User> taUsers=fua.findAllUsersWithRole(User.ROLE_TA);
+            	Vector<String> taUserids=new Vector<String>();
+            	for (User u:taUsers) {
+            		taUserids.add(u.getUserId()+" ("+u.getName()+")");
+            	}
+             	if (taUsers.isEmpty()) {
+            		ui.write("Sorry, there are no registered TA's");
+            		
+            	} else {
+            		while (!taUsers.isEmpty()) {
+            			Selection temp=new Selection("Add which TA:", taUserids);
+            			int selectedTa=select(temp);
+            			TA ta=new TA((User) taUsers.elementAt(selectedTa), token );
+            			taUsers.remove(selectedTa);
+            			taUserids.remove(selectedTa);
+            			ui.write("Add another TA: " );
+            			boolean anotherTA=yesNo();
+            			if (anotherTA==false) {
+            				break;
+            			}
+            		}
+            	}
+                       	
             }
+            
+            Instructor instructor=new Instructor(ui.getSession().getUser());
+            ca.addCourse(token, idCode, startDate, endDate, instructor, taList);
+            ui.statusUpdate("Course "+token+" added ok.");
 
-            String rsp = ui.readLine();
-            int index = Utils.str2int(rsp) - 1;
-
-            if ((index > 0) && (index < choices.size())) {
-                String csIdCode = choices.elementAt(index).toString();
-                CourseSubject csSelected = null;
-
-                for (CourseSubject cs : subjects) {
-                    if (cs.getIdCode().equals(csIdCode)) {
-                        csSelected = cs;
-                    }
-                }
-
-                if (csSelected != null) {
-                    ui.write("Enter the token for the course: ");
-                    String token=ui.readLine();
-                    
-
-                }
-            }
-
-        } catch (ConnectionFailedException e) {
-            ui.write("Add course failed due to: Database connection failure.");
-            ui.statusUpdate("Add course failed due to: Database connection failure.");
-        } catch (RecordNotFoundException e) {
-            ui.write("Add course failed due to: Missing course subject information.");
-            ui.statusUpdate("Add course failed due to: Missing course subject information.");
-        }
+        } catch (Exception e) {
+            ui.statusUpdate("Add course failed: "+e.getMessage());
+        } 
 
     }
 
-    public static void addCourseSubject(UI ui) {
+    public void addCourseSubject() {
         ui.clear();
         ui.write("\nAdding a new course subject\n");
         ui.write(" Enter the id code for the course: ");
@@ -76,56 +161,31 @@ public class InstructorDialogue {
             CourseActions ca = new CourseActions(ui.getSession());
             ca.addCourseSubject(cs);
             ui.statusUpdate("Adding new course subject");
-        } catch (ConnectionFailedException e) {
-            ui.write("Add course subject failed due to: Database connection failure.");
+        } catch (Exception e) {
+            ui.write("Add course subject failed: "+e.getMessage());
             ui.statusUpdate("Add course subject failed due to: Database connection failure.");
         }
     }
 
-    public static void addHomework(UI ui) {
+    public void addHomework() {
 
     }
 
-    public static void addTopic(UI ui) {
+    public void addTopic() {
 
     }
 
-    public static void findHighestOnAHomework(UI ui) {
+    public void findHighestOnAHomework() {
 
     }
 
-    public static void findHighestOverall(UI ui) {
+    public void findHighestOverall() {
 
     }
 
-    public static void findMissingHomework(UI ui) {
+    public void findMissingHomework() {
 
     }
 
-    public static void showDialogue(UI ui) {
-        for (boolean isValid = false; !isValid;) {
-            ui.clear();
-            ui.write("\nInstructor Activities");
-            ui.write("\n");
-            ui.write(" 1. Add a course subject\n");
-            ui.write(" 2. Add a course\n");
-            ui.write(" 3. Add a course topic\n");
-            ui.write(" 4. Add a homework\n");
-            ui.write(" 5. Find students that did not take a homework\n");
-            ui.write(" 6. Find students that scored highest on a homework\n");
-            ui.write(" 7. Find students that scored highest on any homework\n");
-            ui.write("\n");
-
-            String rsp = ui.readLine();
-            try {
-                int i = Integer.parseInt(rsp);
-                isValid = true;
-                switch (i) {
-                    case 1:
-                }
-            } catch (NumberFormatException e) {
-                ui.statusUpdate("Invalid selection");
-            }
-        }
-    }
+    
 }

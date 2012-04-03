@@ -19,8 +19,8 @@ public class Assessment {
         
         UI ui=new UI();
         try {
-            Factory.getInstance(true,ui).getUsers().putUser(a);
-            Factory.getInstance(true,ui).getUsers().putUser(b);
+            Factory.getInstance(true).getUsers().putUser(a);
+            Factory.getInstance(true).getUsers().putUser(b);
         } catch (RecordNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -1,4 +1,6 @@
 package db;
+import java.util.List;
+
 import common.User;
 
 import exception.ConnectionFailedException;
@@ -42,6 +44,12 @@ public class DBUsers implements Users {
 	public void createTables() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<User> getAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

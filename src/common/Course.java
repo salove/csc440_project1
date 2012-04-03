@@ -101,4 +101,16 @@ public class Course {
 		this.endDate=new C_Date(date);
 	}
 	
+	public void setSubject(CourseSubject subject) {
+		this.subject=subject;
+	}
+
+	public void setStartDate(C_Date startDate) {
+		this.startDate=startDate;
+	}
+	
+	public void setEndDate(C_Date endDate) {
+		this.endDate=endDate;
+	}
+	
 }

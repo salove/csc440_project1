@@ -1,5 +1,7 @@
 package db;
 import java.util.ArrayList;
+import java.util.List;
+
 import common.User;
 
 import exception.ConnectionFailedException;
@@ -51,6 +53,12 @@ public class UTUsers implements Users {
 	@Override
 	public void createTables() {
 		// nothing to do for UT
+	}
+
+	@Override
+	public List<User> getAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

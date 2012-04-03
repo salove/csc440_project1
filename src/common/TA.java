@@ -3,10 +3,10 @@ import exception.*;
 
 public class TA extends User {
 
-	Course someClass;
+	String courseToken;
 	
-	TA(User user, Course someClass) throws RoleException {
+	public TA(User user, String courseToken) throws RoleException {
 		super(user, ROLE_TA);
-		this.someClass=someClass;
+		this.courseToken=courseToken;
 	}
 }

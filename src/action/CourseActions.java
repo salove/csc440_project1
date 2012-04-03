@@ -42,4 +42,25 @@ public class CourseActions {
     public List<CourseSubject> getAllCourseSubjects() throws RecordNotFoundException, ConnectionFailedException {
         return factory.getCourseSubjects().getAll();
     }
+    
+    
+    
+    public void addCourse(String token, String idCode,
+    		C_Date startDate, C_Date endDate, 
+    		Instructor instructor, List<TA> taList ) {
+    	Course course=new Course(token);
+    	CourseSubject subject=getCourse(idCode);
+    	course.setSubject(subject);
+    	course.setStartDate(startDate);
+    	course.setEndDate(endDate);
+    	course.setInstructor(instructor);
+    	for (TA ta:taList) {
+    		course.addTA(ta);
+    	}
+    }
+
+	private CourseSubject getCourse(String idCode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
