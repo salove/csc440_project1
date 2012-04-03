@@ -87,4 +87,11 @@ public class DBExerciseAttempts implements ExerciseAttempts {
 		
 		return attempts;
 	}
+
+	@Override
+	public List<ExerciseAttempt> getAll() throws SQLException,
+			ConnectionFailedException, RecordNotFoundException, RoleException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

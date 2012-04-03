@@ -3,12 +3,7 @@ package ui;
 import java.util.List;
 import java.util.Vector;
 
-import common.C_Date;
-import common.Course;
-import common.CourseSubject;
-import common.Exercise;
-import common.Student;
-import common.Utils;
+import common.*;
 
 public class GeneralDialogue {
 	
@@ -111,13 +106,17 @@ public class GeneralDialogue {
 					 (day>=1) && (day<=daysInMonth[monthIdx]) &&
 					 (year>=1800) && (year<=9999) ) {
 					return new C_Date(month,day,year);
+				} else {
+					ui.write("\n [mm-dd-yyyy] ");
 				}
+			} else {
+				ui.write(" [mm-dd-yyyy] ");
 			}
 			
 		}
 	}
 	
-	protected String formatStudent(Student s) {
+	protected String formatUser(User s) {
 		return (s.getUserId()+" ("+s.getName()+")");
 	}
 	
@@ -126,7 +125,7 @@ public class GeneralDialogue {
 	}
 	
 	protected String formatCourse(Course c) {
-		return (c.getToken()+"-"+c.getName());
+		return (c.getSubject().getIdCode()+"-"+c.getToken()+"-"+c.getName());
 	}
 	
 	protected String formatExercise(Exercise ex) {
@@ -173,5 +172,20 @@ public class GeneralDialogue {
 		int selectIdx=select(temp);
 		
 		return subjectVector.get(selectIdx);
+	}
+	
+	protected User selectUser(List<User> list) {
+		Vector<User> userVector=new Vector<User>(list);
+		Vector<String> userString=new Vector<String>();
+		for (User u:userVector) {
+			userString.add(formatUser(u));
+		}
+		ui.clear();
+		Selection temp=new Selection("\nChoose one of the following users:", userString);
+		int selectIdx=select(temp);
+		ui.write("TEST");
+		ui.readLine();
+		
+		return userVector.get(selectIdx);
 	}
 }

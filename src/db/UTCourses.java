@@ -26,6 +26,17 @@ public class UTCourses implements Courses {
 	}
 	
 	private ArrayList<Course> list=new ArrayList<Course>();
+	private class Enrollment {
+		@SuppressWarnings("unused")
+		public Student student;
+		@SuppressWarnings("unused")
+		public Course course;
+		Enrollment(Student s, Course c) {
+			student=s;
+			course=c;
+		}
+	}
+	private ArrayList<Enrollment> enrollment=new ArrayList<Enrollment>();
 
 	@Override
 	public void dropTables() {
@@ -115,11 +126,20 @@ public class UTCourses implements Courses {
 		return retVal;
 	}
 
-	@Override
+	
 	public List<Course> getAll() throws ConnectionFailedException,
 			RecordNotFoundException, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return list;
 	}
 
+	@Override
+	public void enrollStudent(Course course, Student student) throws ConnectionFailedException,
+			RecordNotFoundException, SQLException {
+		course.addStudent(student);
+		Enrollment e=new Enrollment(student, course);
+		enrollment.add(e);
+		
+	}
+
+	
 }

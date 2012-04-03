@@ -1,11 +1,15 @@
 package db;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import common.Exercise;
 import common.ExerciseAttempt;
 import common.Student;
+import exception.ConnectionFailedException;
+import exception.RecordNotFoundException;
+import exception.RoleException;
 
 public class UTExerciseAttempts implements ExerciseAttempts {
     
@@ -61,5 +65,11 @@ public class UTExerciseAttempts implements ExerciseAttempts {
         }
         return retVal;
     }
+
+	@Override
+	public List<ExerciseAttempt> getAll() throws SQLException,
+			ConnectionFailedException, RecordNotFoundException, RoleException {
+		return list;
+	}
 
 }

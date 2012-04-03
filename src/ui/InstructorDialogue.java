@@ -8,6 +8,7 @@ import action.CourseActions;
 import action.ExerciseActions;
 import action.ExerciseAttemptActions;
 import action.FindUserActions;
+import action.QueryActions;
 
 import common.*;
 
@@ -23,7 +24,8 @@ public class InstructorDialogue extends GeneralDialogue {
 			/* 6 */ "Show course subjects",
 			/* 7 */ "Show courses",
 			/* 8 */ "Show enrolled students",
-			/* 9 */ "Exit"
+			/* 9 */ "Enroll students in a class",
+			/* 10 */ "Exit"
 			};
 	
 	private Selection instructorSelection= new Selection("Please choose one of the following: ", instructorMenu);
@@ -59,12 +61,30 @@ public class InstructorDialogue extends GeneralDialogue {
     			showEnrolledStudents();
     			break;
     		case 9:
+    			enrollStudents();
+    			break;
+    		case 10:
     			doExit=true;
     			break;
     		}
     	}
     }
 	
+	private void enrollStudents() {
+		try {
+		CourseActions ca=new CourseActions(ui.getSession());
+		List<Course> courseList=ca.getAllCourses();
+		Course selectedCourse = selectCourse(courseList);
+		FindUserActions fua=new FindUserActions(ui.getSession());
+		List<User> studentList=fua.findAllUsersWithRole(User.ROLE_STUDENT);
+		User selectedUser=selectUser(studentList);
+		ca.enrollStudent(selectedCourse, new Student(selectedUser));
+		
+		} catch (Exception e ) {
+			ui.statusUpdate("Failed to enroll student:"+e.getMessage());
+		}
+	}
+
 	private void showEnrolledStudents() {
 		CourseActions ca;
 		try {
@@ -73,7 +93,7 @@ public class InstructorDialogue extends GeneralDialogue {
 			Course course=selectCourse(courseList);
 			
 			for (Student s:course.getStudentList()) {
-				ui.write("  "+formatStudent(s));
+				ui.write("  "+formatUser(s));
 			}
 			ui.write("\n\nPress enter to continue\n");
 			ui.readLine();
@@ -85,8 +105,10 @@ public class InstructorDialogue extends GeneralDialogue {
 	private void showCourses() {
 		CourseActions ca;
 		try {
+			ui.clear();
 			ca=new CourseActions(ui.getSession());
 			List<Course> courseList=ca.getAllCourses();
+			ui.statusUpdate("Course list is " + (courseList.isEmpty()?"empty":"not empty"));
 			for (Course c:courseList) {
 				ui.write("  "+formatCourse(c));
 			}
@@ -118,52 +140,83 @@ public class InstructorDialogue extends GeneralDialogue {
 	}
 
 	private void findStudentScores() {
+		String[] subMenu= {
+				/* 0 */ "Find students that scored the maximum on the first attempt for an Exercise.",
+				/* 1 */ "Find students that scored the maximum score on the first attempt for any Exercise",
+				/* 2 */ "Show scores for all students for all Exercises",
+				/* 3 */ "Show the maximum and minimum score for all Exercises",
+				/* 4 */ "Show the maximum and minimum score for all Questions",
+				/* 5 */ "Show the average number of attempts for all Exercises",
+				/* 6 */ "Show the average number of attempts for all Questions",
+				/* 7 */ "Exit"
+		};
 		
-		
-		
+		Selection sub=new Selection("Student score submenu:", subMenu);
 		
 		try {
-			
-			ui.write("For a particular homework: ");
-			boolean forOneHW=yesNo();
-			if (forOneHW) {
-			
+		
+			QueryActions qa=new QueryActions(ui.getSession());
 			CourseActions ca=new CourseActions(ui.getSession());
-			List<Course> courseList=ca.getAllCourses();
-			Vector<Course> courseVector=new Vector<Course>(courseList);
-			Vector<String> courseNames=new Vector<String>();
-			for (Course c:courseVector) {
-				courseNames.add(c.getToken()+" - "+c.getName());
-			}
-			Selection temp=new Selection("For which course:", courseNames);
-			int courseIdx=select(temp);
-			Course selectedCourse=courseVector.get(courseIdx);
-			
 			ExerciseActions ea=new ExerciseActions(ui.getSession());
-			List<Exercise> exerciseList=ea.getForCourse(selectedCourse);
-			Vector<Exercise> exerciseVector=new Vector<Exercise>(exerciseList);
-			Vector<String> exerciseNames=new Vector<String>();
-			for (Exercise ex:exerciseVector) {
-				exerciseNames.add(""+ex.getId()+" - "+ex.getStartDate().toString());
+			
+			switch(select(sub)) {
+			case 0:
+			{	
+				List<Course> courses=ca.getAllCourses();
+				Course selectedCourse=selectCourse(courses);
+				List<Exercise> exercises=ea.getForCourse(selectedCourse);
+				Exercise ex=selectExercise(exercises);
+				List<Student> students=qa.findStudentsThatScoredMaxOnFirstAttemptForExercise(ex); 
+				ui.clear();
+				ui.write("\n\nStudents scoring highest on first attempt of "+ex.getName()+"\n\n");
+				for (Student s:students) {
+					ui.write("  "+formatUser(s));
+				}
+				break;
 			}
-			Selection temp2=new Selection("For which exercise: ", exerciseNames);
-			int exerciseIdx=select(temp2);
-			
-			Exercise selectedExercise=exerciseVector.get(exerciseIdx);
-			
-			ExerciseAttemptActions eaa=new ExerciseAttemptActions(ui.getSession());
-			List<ExerciseAttempt> attempts=eaa.getExerciseAttempts(selectedExercise);
-			for(ExerciseAttempt attempt:attempts) {
-				ui.write(" More work to do here");
+			case 1:
+			{
+				List<Student> students=qa.findStudentsThatScoredMaxOnFirstAttemptAnyExercises();
+				ui.clear();
+				ui.write("\n\nStudents scoring highest on first attempt of any exercises\n\n");
+				for (Student s:students) {
+					ui.write("  "+formatUser(s));
+				}
 			}
-			
-			} else {
-				// For all HW
+			case 2:
+			{
+				ui.write("\n\n Not Implemented - press Enter");
+				ui.readLine();
 			}
-			
-			
+			case 3:
+			{
+				ui.write("\n\n Not Implemented - press Enter");
+				ui.readLine();
+			}
+			case 4:
+			{
+				ui.write("\n\n Not Implemented - press Enter");
+				ui.readLine();
+			}
+			case 5:
+			{
+				ui.write("\n\n Not Implemented - press Enter");
+				ui.readLine();
+			}
+			case 6:
+			{
+				ui.write("\n\n Not Implemented - press Enter");
+				ui.readLine();
+			}
+			case 7:
+			{
+				ui.write("\n\n Not Implemented - press Enter");
+				ui.readLine();
+			}
+			}
+		
 		} catch (Exception e) {
-			ui.statusUpdate("Failed to retrieve students missing homework: "+e.getMessage());
+			ui.statusUpdate("Failed to retrieve data: "+e.getMessage());
 		}
 	}
 
@@ -250,32 +303,20 @@ public class InstructorDialogue extends GeneralDialogue {
             List<TA> taList=new ArrayList<TA>();
             
             if (addTA) {
+            	ui.statusUpdate("Adding TA, size is "+taList.size());
             	FindUserActions fua=new FindUserActions(ui.getSession());
+            	ui.statusUpdate("FUA is " + (null==fua ? "<null>": "not null"));
             	
             	Vector<User> taUsers=fua.findAllUsersWithRole(User.ROLE_TA);
-            	Vector<String> taUserids=new Vector<String>();
-            	for (User u:taUsers) {
-            		taUserids.add(u.getUserId()+" ("+u.getName()+")");
-            	}
-             	if (taUsers.isEmpty()) {
-            		ui.write("Sorry, there are no registered TA's");
-            		
-            	} else {
-            		while (!taUsers.isEmpty()) {
-            			Selection temp=new Selection("Add which TA:", taUserids);
-            			int selectedTa=select(temp);
-            			TA ta=new TA((User) taUsers.elementAt(selectedTa), token );
-            			taUsers.remove(selectedTa);
-            			taUserids.remove(selectedTa);
-            			ui.write("Add another TA: " );
-            			boolean anotherTA=yesNo();
-            			if (anotherTA==false) {
-            				break;
-            			}
-            		}
-            	}
+            	ui.statusUpdate("taUsers size is "+taUsers.size());
+            	
+            	User selectedTA=selectUser(taUsers);
+            	taList.add(new TA(selectedTA,token));
+            	
                        	
             }
+            
+            ui.statusUpdate("Done with ta");
             
             Instructor instructor=new Instructor(ui.getSession().getUser());
             ca.addCourse(token, idCode, startDate, endDate, instructor, taList);

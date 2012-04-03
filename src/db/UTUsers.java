@@ -57,8 +57,7 @@ public class UTUsers implements Users {
 
 	@Override
 	public List<User> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return list;
 	}
 
 }

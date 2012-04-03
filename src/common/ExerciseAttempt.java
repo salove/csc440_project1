@@ -12,11 +12,13 @@ public class ExerciseAttempt {
     private Exercise exercise;
     private Vector<AnswerAttempt> answerAttempts=new Vector<AnswerAttempt>();
     
+    
     public ExerciseAttempt(Course course, Student student, C_Date startDate, Exercise exercise) {
         this.course=course;
         this.student=student;
         this.startDate=startDate;
         this.exercise=exercise;
+      
         
         Vector<Question> vectorOfQuestions = new Vector<Question>(exercise.getQuestions());
         
@@ -65,4 +67,16 @@ public class ExerciseAttempt {
     public Vector<AnswerAttempt> getAnswerAttempts() {
         return ((Vector<AnswerAttempt>)answerAttempts.clone());
     }
+    
+    public int getScore() {
+    	int score=0;
+    	
+    	for (AnswerAttempt aa:answerAttempts) {
+    		score+=aa.getScore();
+    	}
+    	
+    	return score;
+    }
+    
+    
 }

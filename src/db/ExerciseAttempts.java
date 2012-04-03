@@ -14,4 +14,5 @@ public interface ExerciseAttempts extends Tables {
     void addExerciseAttempt(ExerciseAttempt exerciseAttempt);
     List<ExerciseAttempt> getExerciseAttemptsForStudent(Student s);
     List<ExerciseAttempt> getExerciseAttemptsForExercise(Exercise e) throws SQLException, ConnectionFailedException, RecordNotFoundException, RoleException;
+    List<ExerciseAttempt> getAll() throws SQLException, ConnectionFailedException, RecordNotFoundException, RoleException;
 }

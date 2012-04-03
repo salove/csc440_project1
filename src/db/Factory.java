@@ -77,12 +77,29 @@ public class Factory {
 		}
 	}
 	
+	public Questions getQuestions() {
+		if (unitTest) {
+			return UTQuestions.getInstance(connection);
+		} else {
+			return DBQuestions.getInstance(connection);
+		}
+	}
+	
+	public Queries getQueries() throws ConnectionFailedException {
+		if (unitTest) {
+			return UTQueries.getInstance(connection);
+		} else {
+			return DBQueries.getInstance(connection);
+		}
+	}
+	
 	public void createTables() throws SQLException {
 		
 		getUsers().createTables();
 		getCourseSubjects().createTables();
 		getTopics().createTables();
 		getCourses().createTables();
+		getQuestions().createTables();
 		getExercises().createTables();
 		getExerciseAttempts().createTables();
 		
@@ -93,6 +110,7 @@ public class Factory {
 	    getExerciseAttempts().dropTables();
 	    getExercises().dropTables();
 		getCourses().dropTables();
+		getQuestions().dropTables();
 		getTopics().dropTables();
 		getCourseSubjects().dropTables();
 		getUsers().dropTables();

@@ -122,4 +122,14 @@ public class DBCourses implements Courses {
 		return null;
 	}
 
+	
+
+	@Override
+	public void enrollStudent(Course course, Student student)
+			throws ConnectionFailedException, RecordNotFoundException,
+			SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

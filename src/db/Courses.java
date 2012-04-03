@@ -14,4 +14,5 @@ public interface Courses extends Tables {
 	List<Course> getByInstructor(Instructor instructor)  throws ConnectionFailedException, RecordNotFoundException,SQLException, RoleException;
 	List<Course> getByTA(TA ta)  throws ConnectionFailedException, RecordNotFoundException,SQLException;
 	List<Course> getAll() throws ConnectionFailedException, RecordNotFoundException,SQLException;
+	void enrollStudent(Course course, Student student) throws ConnectionFailedException, RecordNotFoundException,SQLException;
 }

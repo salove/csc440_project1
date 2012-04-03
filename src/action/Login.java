@@ -18,7 +18,7 @@ public class Login {
 			if (!user.getPWHash().equals(Utils.pwHash(pw))) {
 				throw new LoginFailedException("Password not valid.");
 			}
-			return new Session(user);
+			return new Session(user,ui);
 		} catch (RecordNotFoundException e) {
 			throw new LoginFailedException("User id "+userId+" not found.");
 		} catch (ConnectionFailedException e) {

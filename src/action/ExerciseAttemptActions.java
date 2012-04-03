@@ -56,4 +56,21 @@ public class ExerciseAttemptActions {
 		return (f.getExerciseAttempts().getExerciseAttemptsForStudent(student));
 		
 	}
+	
+	public int getExerciseAttemptNumber(ExerciseAttempt ea) throws ConnectionFailedException {
+		Factory f=Factory.getInstance(Settings.checkUnitTest());
+		List<ExerciseAttempt> attempts=f.getExerciseAttempts().getExerciseAttemptsForStudent(ea.getStudent());
+		int attemptNumber=1;
+		for (ExerciseAttempt a:attempts) {
+			if (a.getExercise()==ea.getExercise()) {
+				if (a!=ea) {
+					if (a.getSubmissionDate().before(ea.getSubmissionDate())) {
+						attemptNumber++;
+					}
+				}
+			}
+		}
+		
+		return attemptNumber;
+	}
 } 

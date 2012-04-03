@@ -49,7 +49,7 @@ public class CourseActions {
     
     public void addCourse(String token, String idCode,
     		C_Date startDate, C_Date endDate, 
-    		Instructor instructor, List<TA> taList ) {
+    		Instructor instructor, List<TA> taList ) throws ConnectionFailedException, SQLException {
     	Course course=new Course(token);
     	CourseSubject subject=getCourse(idCode);
     	course.setSubject(subject);
@@ -59,6 +59,9 @@ public class CourseActions {
     	for (TA ta:taList) {
     		course.addTA(ta);
     	}
+    	
+    	
+    	factory.getCourses().putCourse(course);
     }
 
 	private CourseSubject getCourse(String idCode) {
@@ -80,6 +83,11 @@ public class CourseActions {
 	public List<Topic> getTopics(CourseSubject subject) throws ConnectionFailedException {
 		Factory f=Factory.getInstance(Settings.checkUnitTest());
 		return f.getTopics().getTopics(subject);
+	}
+	
+	public void enrollStudent(Course course, Student student) throws ConnectionFailedException, RecordNotFoundException, SQLException {
+		Factory f=Factory.getInstance(Settings.checkUnitTest());
+		f.getCourses().enrollStudent(course, student);
 	}
 	
 }

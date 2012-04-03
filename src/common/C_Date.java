@@ -20,4 +20,8 @@ public class C_Date {
 		
 		this(date.getMonth(),date.getDate(),date.getYear());
 	}
+
+	public boolean before(C_Date rhs) {
+		return this.calendar.before(rhs.calendar);
+	}	
 }
