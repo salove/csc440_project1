@@ -73,4 +73,14 @@ public class ExerciseAttemptActions {
 		
 		return attemptNumber;
 	}
+	
+	public ExerciseAttempt create(Student student, Exercise exercise) {
+		ExerciseAttempt ea=new ExerciseAttempt(exercise.getCourse(), student, new C_Date(), exercise);
+		return ea;
+	}
+	
+	public void storeExerciseAttempt(ExerciseAttempt ea) throws ConnectionFailedException {
+		Factory f=Factory.getInstance(Settings.checkUnitTest());
+		f.getExerciseAttempts().addExerciseAttempt(ea);
+	}
 } 

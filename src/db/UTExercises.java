@@ -5,6 +5,7 @@ import java.util.List;
 
 import common.Course;
 import common.Exercise;
+import common.Student;
 import exception.RecordNotFoundException;
 
 public class UTExercises implements Exercises {
@@ -69,6 +70,12 @@ public class UTExercises implements Exercises {
        list.add(exercise);
 
     }
+
+	@Override
+	public List<Exercise> getExercisesByStudent(Student s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	
 }

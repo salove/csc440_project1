@@ -76,8 +76,7 @@ public class UTQueries implements Queries {
 	@Override
 	public int findMaximumScore(Exercise exercise) throws SQLException, ConnectionFailedException, RecordNotFoundException, RoleException {
 		int max=Integer.MIN_VALUE;
-		ArrayList<Student> retVal=new ArrayList<Student>();
-		
+				
 		List<ExerciseAttempt> eaList=factory.getExerciseAttempts().getExerciseAttemptsForExercise(exercise);
 		for (ExerciseAttempt ea:eaList) {
 			max=Math.max(max, ea.getScore());
@@ -93,7 +92,7 @@ public class UTQueries implements Queries {
 	@Override
 	public int findMinimumScore(Exercise exercise) throws SQLException, ConnectionFailedException, RecordNotFoundException, RoleException {
 		int min=Integer.MAX_VALUE;
-		ArrayList<Student> retVal=new ArrayList<Student>();
+		
 		
 		List<ExerciseAttempt> eaList=factory.getExerciseAttempts().getExerciseAttemptsForExercise(exercise);
 		for (ExerciseAttempt ea:eaList) {

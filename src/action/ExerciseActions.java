@@ -18,4 +18,9 @@ public class ExerciseActions {
 		Factory f=Factory.getInstance(Settings.checkUnitTest());
 		return f.getExercises().getExercisesByCourse(c);
 	}
+	
+	public List<Exercise> getForStudent(Student s) throws ConnectionFailedException, RecordNotFoundException, SQLException {
+		Factory f=Factory.getInstance(Settings.checkUnitTest());
+		return f.getExercises().getExercisesByStudent(s);
+	}
 }

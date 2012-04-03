@@ -84,6 +84,7 @@ KeyListener, FocusListener {
 
 		AdministratorDialogue adminDialogue= new AdministratorDialogue(this);
 		InstructorDialogue instructorDialogue = new InstructorDialogue(this);
+		StudentDialogue studentDialogue=new StudentDialogue(this);
 
 		while (true) {
 			LoginDialogue.login(this);
@@ -98,7 +99,7 @@ KeyListener, FocusListener {
 				instructorDialogue.showMainDialogue();
 				break;
 			case User.ROLE_STUDENT:
-				StudentDialogue.showDialogue(this);
+				studentDialogue.showMainDialogue();
 				break;
 			case User.ROLE_TA:
 				TADialogue.showDialogue(this);

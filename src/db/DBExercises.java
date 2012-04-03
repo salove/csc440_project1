@@ -5,6 +5,7 @@ import java.sql.*;
 
 import common.Course;
 import common.Exercise;
+import common.Student;
 
 import exception.ConnectionFailedException;
 import exception.RecordNotFoundException;
@@ -117,6 +118,12 @@ public class DBExercises implements Exercises {
 	@Override
 	public Exercise getExercise(Course course, int i)
 			throws ConnectionFailedException, RecordNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Exercise> getExercisesByStudent(Student s) {
 		// TODO Auto-generated method stub
 		return null;
 	}

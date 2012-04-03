@@ -13,6 +13,7 @@ import exception.RoleException;
 
 public class DBQueries implements Queries {
 
+	@SuppressWarnings("unused")
 	private Connection connection;
 	private DBQueries(Connection c ) {
 		this.connection=c;

@@ -1,6 +1,7 @@
 package common;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Question {
 	private String id;
@@ -67,4 +68,11 @@ public class Question {
 	    incorrectAnswers.add(new Answer(this,id,text,explanation,true));
 	}
 	
+	public List<Answer> getCorrectAnswers() {
+		return correctAnswers;
+	}
+	
+	public List<Answer> getIncorrectAnswers() {
+		return incorrectAnswers;
+	}
 }
