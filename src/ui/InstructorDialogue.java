@@ -12,7 +12,6 @@ import action.QueryActions;
 import action.QuestionActions;
 
 import common.*;
-import exception.ConnectionFailedException;
 
 public class InstructorDialogue extends GeneralDialogue {
 

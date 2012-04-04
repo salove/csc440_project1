@@ -126,13 +126,20 @@ KeyListener, FocusListener {
 		char c = e.getKeyChar();
 
 		if (Character.isISOControl(c)) {
-			write(c);
+			
 			if (c == '\n') {
 				this.readResult = this.keyBuffer.toString();
 				isEchoObfuscated=false;
 				synchronized (this) {
 					this.notify();
 				}
+				write(c);
+			} else if (c=='\b') {
+				this.mainBuffer.setLength(this.mainBuffer.length()-1);
+				this.keyBuffer.setLength(Math.max(0,keyBuffer.length()-1));
+				updateMainText();
+			} else {
+				write(c);
 			}
 		} else {
 			this.keyBuffer.append(c);
