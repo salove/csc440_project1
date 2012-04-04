@@ -58,9 +58,11 @@ public class UTExercises implements Exercises {
             }
         }
         
+        /*
         if (0==retVal.size()) {
             throw new RecordNotFoundException("No exercises for course "+course.getToken()+" were found.");
         } 
+        */
         
         return retVal;
     }

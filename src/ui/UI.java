@@ -85,13 +85,15 @@ KeyListener, FocusListener {
 		AdministratorDialogue adminDialogue= new AdministratorDialogue(this);
 		InstructorDialogue instructorDialogue = new InstructorDialogue(this);
 		StudentDialogue studentDialogue=new StudentDialogue(this);
+		TADialogue taDialogue=new TADialogue(this);
+		SelectRoleDialogue selectRoleDialogue=new SelectRoleDialogue(this);
 
 		while (true) {
 			LoginDialogue.login(this);
 			statusUpdate("Login "+session.getUser().getUserId()+" ok.");
 
 
-			switch (SelectRoleDialogue.selectRole(this)) {
+			switch (selectRoleDialogue.selectRole()) {
 			case User.ROLE_ADMINISTRATOR:
 				adminDialogue.showMainDialogue();
 				break;
@@ -102,7 +104,7 @@ KeyListener, FocusListener {
 				studentDialogue.showMainDialogue();
 				break;
 			case User.ROLE_TA:
-				TADialogue.showDialogue(this);
+				taDialogue.showDialogue();
 				break;
 			}
 
