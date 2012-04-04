@@ -132,6 +132,10 @@ public class GeneralDialogue {
 		return (ex.getCourse().getToken()+"-"+ex.getId());
 	}
 	
+	protected String formatTopic(Topic t) {
+		return (t.getId()+"-"+t.getName());
+	}
+	
 	protected Course selectCourse(List<Course>list) {
 		Vector<Course> courseVector=new Vector<Course>(list);
 		Vector<String> courseStrings=new Vector<String>();
@@ -183,9 +187,20 @@ public class GeneralDialogue {
 		ui.clear();
 		Selection temp=new Selection("\nChoose one of the following users:", userString);
 		int selectIdx=select(temp);
-		ui.write("TEST");
-		ui.readLine();
 		
 		return userVector.get(selectIdx);
+	}
+	
+	protected Topic selectTopic(List<Topic> list) {
+		Vector<Topic> topicVector=new Vector<Topic>(list);
+		Vector<String> topicStrings=new Vector<String>();
+		for (Topic t:topicVector) {
+			topicStrings.add(formatTopic(t));
+		}
+		ui.clear();
+		Selection temp=new Selection("\nChoose one of the following topics:", topicStrings);
+		int selectIdx=select(temp);
+		
+		return topicVector.get(selectIdx);
 	}
 }

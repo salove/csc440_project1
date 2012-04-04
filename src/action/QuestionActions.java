@@ -18,4 +18,7 @@ public class QuestionActions {
 		return factory.getQuestions().getAll();
 	}
 	
+	public void putQuestion(Question q) {
+		factory.getQuestions().add(q);
+	}
 }

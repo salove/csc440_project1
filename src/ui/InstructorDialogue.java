@@ -12,6 +12,7 @@ import action.QueryActions;
 import action.QuestionActions;
 
 import common.*;
+import exception.ConnectionFailedException;
 
 public class InstructorDialogue extends GeneralDialogue {
 
@@ -26,7 +27,8 @@ public class InstructorDialogue extends GeneralDialogue {
 			/* 7 */ "Show courses",
 			/* 8 */ "Show enrolled students",
 			/* 9 */ "Enroll students in a class",
-			/* 10 */ "Exit"
+			/* 10 */ "Add a new question",
+			/* 11 */ "Exit"
 	};
 
 	private Selection instructorSelection= new Selection("Please choose one of the following: ", instructorMenu);
@@ -65,10 +67,208 @@ public class InstructorDialogue extends GeneralDialogue {
 				enrollStudents();
 				break;
 			case 10:
+				addQuestion();
+				break;
+			case 11:
 				doExit=true;
 				break;
 			}
 		}
+	}
+
+	private void addHomework()  {
+		try {
+			CourseActions ca=new CourseActions(ui.getSession());
+			ExerciseActions ea=new ExerciseActions(ui.getSession());
+			List<Course> courses=ca.getCoursesByInstructor(new Instructor(ui.getSession().getUser()));
+			
+			Course selectedCourse=selectCourse(courses);
+			List<Topic> topicList=new ArrayList<Topic>();
+			for (boolean isDone=false; !isDone; ) {
+				List<Topic> courseTopics=selectedCourse.getTopicList();
+				for (Topic t:topicList) {
+					if (courseTopics.contains(t)) {
+						courseTopics.remove(t);
+					}
+				}
+				if (courseTopics.isEmpty()) {
+					isDone=true;
+				} else {
+					Vector<Topic> topicVector=new Vector<Topic>(courseTopics);
+					Vector<String> topicStrings=new Vector<String>();
+					for (Topic t:topicVector) {
+						topicStrings.add(t.getId()+"-"+t.getName());
+						
+					}
+					topicStrings.add("Done");
+					Selection selection=new Selection("Choose:",topicStrings);
+					int topicIdx=select(selection);
+					if(topicIdx<topicVector.size()) {
+						topicList.add(topicVector.get(topicIdx));
+					} else {
+						isDone=true;
+					}
+					
+				}
+				
+			}
+			
+			int id=-1;
+			for (boolean isValid=false; !isValid; ) {
+				ui.clear();
+				ui.write("\n\nEnter numeric id: ");
+				String rsp=ui.readLine();
+				id=Utils.str2int(rsp);
+				if (id>=0) {
+					isValid=true;
+					List<Exercise> existingExercises=ea.getForCourse(selectedCourse);
+					for (Exercise e:existingExercises) {
+						if (id==e.getId()) {
+							isValid=false;
+							ui.write("\nID already in use, choose another\nPress enter to continue\n");
+							ui.readLine();
+						}
+					}
+				}
+			}
+			
+			Exercise exercise=new Exercise(selectedCourse,id);
+			
+			ui.clear();
+			ui.write("Enter start date: ");
+			exercise.setStartDate(askDate());
+			ui.write("Enter end date: ");
+			exercise.setEndDate(askDate());
+			
+			for (boolean isValid=false; !isValid; ) {
+				ui.clear();
+				ui.write("\nEnter points for correct answer: ");
+				String rsp=ui.readLine();
+				int points=Utils.str2int(rsp);
+				if (points>0) {
+					exercise.setPointsPerCorrectAnswer(points);
+					isValid=true;
+				}
+			}
+			
+			for (boolean isValid=false; !isValid; ) {
+				ui.clear();
+				ui.write("\nEnter points lost for incorrect answer: ");
+				String rsp=ui.readLine();
+				int points=Utils.str2int(rsp);
+				if (points>=0) {
+					exercise.setPointsPerWrongAnswer(points);
+					isValid=true;
+				}
+			}
+			
+			for (boolean isValid=false; !isValid; ) {
+				ui.clear();
+				ui.write("\nEnter retries allowed: ");
+				String rsp=ui.readLine();
+				int retriesAllowed=Utils.str2int(rsp);
+				if (retriesAllowed>=0) {
+					exercise.setRetriesAllowed(retriesAllowed);
+					isValid=true;
+				}
+			}
+			
+			String[] scoreMenu= {
+					"First Attempt",
+					"Last Attempt",
+					"Max of all Attempts",
+					"Average of all Attempts"
+			};
+			
+			Selection scoreSelect=new Selection("Enter scoring method:", scoreMenu);
+			int scoreMethod=select(scoreSelect);
+			exercise.setScoreSelectionMethod(scoreMethod);
+			
+			ea.put(exercise);
+			
+			ui.write("\nExercise added\n");
+			ui.write("Press enter to continue\n");
+			ui.readLine();
+			
+		} catch(Exception e ) {
+			ui.statusUpdate("Add exercise failed: "+e.getMessage() );
+		}
+		
+		
+	}
+
+	private void addQuestion() {
+		try {
+			CourseActions ca=new CourseActions(ui.getSession());
+			List<CourseSubject> courseSubjects=ca.getAllCourseSubjects();
+			CourseSubject selectedSubject=selectCourseSubject(courseSubjects);
+			
+			List<Topic> topics=selectedSubject.getTopics();
+			Topic selectedTopic=selectTopic(topics);
+			
+			ui.write("\nEnter topic id: ");
+			String topicId=ui.readLine();
+			
+			Question q=new Question(selectedTopic,topicId);
+			
+			ui.write("\nEnter question text: \n");
+			String qText=ui.readLine();
+			q.setQuestionText(qText);
+			
+			ui.write("\nEnter hint (optional): \n");
+			String qHint=ui.readLine();
+			q.setHintText(qHint);
+			
+			ui.write("\nEnter explanation:\n");
+			String qExplanation=ui.readLine();
+			q.setExplanation(qExplanation);
+			
+			boolean someAnswerIsCorrect=false;
+			for (boolean isDone=false; !isDone || !someAnswerIsCorrect; ) {
+				ui.write("Enter an answer or leave blank if done:\n");
+				if (!someAnswerIsCorrect) {
+					ui.write(" (at least one answer must be correct)\n");
+				}
+				String text=ui.readLine();
+				if (text.length()==0) {
+					isDone=true;
+				} else {
+					ui.write("\nIs this answer correct:");
+					boolean isCorrect=yesNo();
+					
+					ui.write("\nEnter Explanation:\n");
+					String explain=ui.readLine();
+					
+					ui.write("\nEnter Id: ");
+					String id=ui.readLine();
+					
+					if (isCorrect) {
+						q.addCorrectAnswer(text, explain, id);
+						someAnswerIsCorrect=true;
+					} else {
+						q.addIncorrectAnswer(text, explain, id);
+					}
+				}
+			}
+			
+			for (boolean isValid=false; !isValid; ) {
+				ui.clear();
+				ui.write("Enter difficulty level: ");
+				String rsp=ui.readLine();
+				int dl=Utils.str2int(rsp);
+				if (dl>0) {
+					q.setDifficultyLevel(dl);
+					isValid=true;
+				}
+			}
+			
+			QuestionActions qa=new QuestionActions(ui.getSession());
+			qa.putQuestion(q);
+			
+		} catch (Exception e) {
+			ui.statusUpdate("Add question failed: "+e.getMessage());
+		}
+		
 	}
 
 	private void enrollStudents() {
@@ -392,22 +592,7 @@ public class InstructorDialogue extends GeneralDialogue {
 		}
 	}
 
-	public void addHomework() {
-
-	}
-
-
-	public void findHighestOnAHomework() {
-
-	}
-
-	public void findHighestOverall() {
-
-	}
-
-	public void findMissingHomework() {
-
-	}
+	
 
 
 }
